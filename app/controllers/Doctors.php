@@ -1,15 +1,14 @@
 <?php
-ini_set('display_errors', 1);
-require_once "../app/controllers/headers.php";
-class Users extends Controller
+
+class Doctors extends Controller
 {
 
-    public $userModel;
+    public $doctorModel;
     public $response;
 
     public function __construct()
     {
-        $this->userModel = $this->model('User');
+        $this->doctorModel = $this->model('Doctor');
     }
 
     public function index()
@@ -21,20 +20,20 @@ class Users extends Controller
         $data = json_decode(file_get_contents("php://input"));
         if (!empty($data->name) && !empty($data->birthday) && !empty($data->cin) && !empty($data->email) && !empty($data->password)) {
             $this->response = [];
-            $this->userModel->name = $data->name;
-            $this->userModel->birthday = date('Y-m-d');
-            $this->userModel->cin = $data->cin;
-            $this->userModel->email = $data->email;
-            $this->userModel->password = $data->password;
-            $this->userModel->img = $data->img;
-            $result = $this->userModel->add();
+            $this->doctorModel->name = $data->name;
+            $this->doctorModel->birthday = date('Y-m-d');
+            $this->doctorModel->cin = $data->cin;
+            $this->doctorModel->email = $data->email;
+            $this->doctorModel->password = $data->password;
+            $this->doctorModel->img = $data->img;
+            $result = $this->doctorModel->add();
             if ($result) {
-                $this->response += ["message" => "User created successfully", "data" => $data];
+                $this->response += ["message" => "Doctor created successfully", "data" => $data];
                 http_response_code(201);
                 echo json_encode($this->response);
                 exit;
             } else {
-                $this->response += ["message" => "Failed creating user"];
+                $this->response += ["message" => "Failed creating doctor"];
                 http_response_code(503);
                 echo json_encode($this->response);
                 exit;

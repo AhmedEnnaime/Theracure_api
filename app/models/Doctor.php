@@ -1,9 +1,9 @@
 <?php
 
-class User extends Model
+class Doctor extends Model
 {
 
-    protected $table = "users";
+    protected $table = "doctors";
 
     // object properties
     public $id;
@@ -19,7 +19,7 @@ class User extends Model
         parent::__construct();
     }
 
-    public function getUsers()
+    public function getDoctors()
     {
         $this->getTable();
     }
