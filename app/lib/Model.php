@@ -29,12 +29,11 @@ class Model
     }
 
 
-    public function getRecordHighestID($id)
+    public function getRowsNum()
     {
-        $this->db->query("SELECT * FROM $this->table WHERE $id = (SELECT max($id) FROM $this->table)");
-        $record = $this->db->single();
-        $maxID = $record->$id;
-        return $maxID;
+        $this->db->query("SELECT COUNT(*) as total FROM $this->table");
+        $row = $this->db->single();
+        return $row;
     }
 
     public function getElementById($id)

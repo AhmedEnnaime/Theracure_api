@@ -10,6 +10,6 @@ define('DB_NAME', 'Theracure');
 
 define('APPROOT', dirname(dirname(__FILE__)));
 
-define('URLROOT', 'http://localhost/YouCode/Medical_office_api');
+define('URLROOT', 'http://localhost/YouCode/Theracure');
 
 define('DB_PORT', '5432');

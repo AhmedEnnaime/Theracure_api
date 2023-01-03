@@ -1,4 +1,5 @@
 <?php
+require_once "../app/controllers/headers.php";
 
 class Doctors extends Controller
 {
@@ -39,7 +40,48 @@ class Doctors extends Controller
                 exit;
             }
         }
-        //print_r($data);
-        //die;
+    }
+
+    public function getDoctorsNum()
+    {
+        $this->response = [];
+        $result = $this->doctorModel->getRowsNum();
+
+        if ($result) {
+            $this->response += ["Number of doctors available is :" => $result->total];
+            http_response_code(200);
+            echo json_encode($this->response);
+            exit;
+        } else {
+            $this->response += ["message" => "Failed fetching data"];
+            http_response_code(503);
+            echo json_encode($this->response);
+            exit;
+        }
+    }
+
+    public function getAllDoctors()
+    {
+        $this->response = [];
+        $result = $this->doctorModel->getDoctors();
+        $count = $this->doctorModel->getRowsNum();
+        if ($count > 0) {
+            if ($result) {
+                $this->response += ["Doctors" => $result];
+                http_response_code(200);
+                echo json_encode($this->response);
+                exit;
+            } else {
+                $this->response += ["message" => "Failed fetching data"];
+                http_response_code(503);
+                echo json_encode($this->response);
+                exit;
+            }
+        } else {
+            $this->response += ["message" => "No doctor available"];
+            http_response_code(200);
+            echo json_encode($this->response);
+            exit;
+        }
     }
 }

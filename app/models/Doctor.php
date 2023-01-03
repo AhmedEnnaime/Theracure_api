@@ -21,13 +21,13 @@ class Doctor extends Model
 
     public function getDoctors()
     {
-        $this->getTable();
+        return $this->getTable();
     }
 
     public function add()
     {
         try {
-            $query = "INSERT INTO " . $this->table . " (name,birthday,cin,email,password,img) VALUES (name=:name, birthday=:birthday, cin=:cin, email=:email, password=:password, img=:img)";
+            $query = "INSERT INTO " . $this->table . " (name, birthday, cin, email, password, img) VALUES (:name, :birthday, :cin, :email, :password, :img)";
             // prepare query
             $this->db->query($query);
 

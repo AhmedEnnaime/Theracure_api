@@ -1,5 +1,5 @@
 <?php
-
+ini_set('display_errors', 1);
 class User extends Model
 {
 
@@ -21,13 +21,13 @@ class User extends Model
 
     public function getUsers()
     {
-        $this->getTable();
+        return $this->getTable();
     }
 
     public function add()
     {
         try {
-            $query = "INSERT INTO " . $this->table . " (name,birthday,cin,email,password,img) VALUES (name=:name, birthday=:birthday, cin=:cin, email=:email, password=:password, img=:img)";
+            $query = "INSERT INTO " . $this->table . " (name,birthday,cin,email,password,img) VALUES (:name,:birthday,:cin,:email,:password,:img)";
             // prepare query
             $this->db->query($query);
 
