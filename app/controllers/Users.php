@@ -47,7 +47,7 @@ class Users extends Controller
             $data->password = password_hash($data->password, PASSWORD_BCRYPT);
             $this->response = [];
             $this->userModel->name = $data->name;
-            $this->userModel->birthday = date('Y-m-d');
+            $this->userModel->birthday = $data->birthday;
             $this->userModel->cin = $data->cin;
             $this->userModel->email = $data->email;
             $this->userModel->password = $data->password;
@@ -64,7 +64,11 @@ class Users extends Controller
                 echo json_encode($this->response);
                 exit;
             }
-        } else echo json_encode(["message" => "Fill all fields"]);
+        } else {
+            $this->response += ["message" => "Fill all fields please"];
+            echo json_encode($this->response);
+            exit;
+        }
         //print_r($data);
         //die;
     }

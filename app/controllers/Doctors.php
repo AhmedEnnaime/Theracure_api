@@ -20,9 +20,10 @@ class Doctors extends Controller
     {
         $data = json_decode(file_get_contents("php://input"));
         if (!empty($data->name) && !empty($data->birthday) && !empty($data->cin) && !empty($data->email) && !empty($data->password)) {
+            $data->password = password_hash($data->password, PASSWORD_BCRYPT);
             $this->response = [];
             $this->doctorModel->name = $data->name;
-            $this->doctorModel->birthday = date('Y-m-d');
+            $this->doctorModel->birthday = $data->birthday;
             $this->doctorModel->cin = $data->cin;
             $this->doctorModel->email = $data->email;
             $this->doctorModel->password = $data->password;

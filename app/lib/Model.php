@@ -47,6 +47,10 @@ class Model
     public function delete($id, $val)
     {
         $this->db->query("DELETE FROM $this->table WHERE $id = '$val'");
-        $this->db->execute();
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

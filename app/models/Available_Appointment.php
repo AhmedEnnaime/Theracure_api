@@ -1,29 +1,27 @@
 <?php
 
-
-class Appointment extends Model
+class Available_Appointment extends Model
 {
 
-    protected $table = "appointments";
+    protected $table = "available_appointments";
 
     // object properties
     public $id;
     public $date;
     public $time;
-    public $user_id;
-    public $doctor_id;
+    public $taken;
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function getAppointments()
+    public function getAvailableAppointments()
     {
         return $this->getTable();
     }
 
-    public function getAppointmentsNum()
+    public function getAvailableAppointmentsNum()
     {
         return $this->getRowsNum();
     }
@@ -31,18 +29,16 @@ class Appointment extends Model
     public function add()
     {
         try {
-            $query = "INSERT INTO " . $this->table . " (date,time,user_id,doctor_id) VALUES (:date,:time,:user_id,:doctor_id)";
+            $query = "INSERT INTO " . $this->table . " (date,time,taken) VALUES (:date,:time,:taken)";
             $this->db->query($query);
 
             $this->date = htmlspecialchars(strip_tags($this->date));
             $this->time = htmlspecialchars(strip_tags($this->time));
-            $this->user_id = htmlspecialchars(strip_tags($this->user_id));
-            $this->doctor_id = htmlspecialchars(strip_tags($this->doctor_id));
+            $this->taken = htmlspecialchars(strip_tags($this->taken));
 
             $this->db->bind(":date", $this->date);
             $this->db->bind(":time", $this->time);
-            $this->db->bind(":user_id", $this->user_id);
-            $this->db->bind(":doctor_id", $this->doctor_id);
+            $this->db->bind(":taken", $this->taken);
 
             if ($this->db->execute()) {
                 return true;
@@ -52,10 +48,5 @@ class Appointment extends Model
         } catch (PDOException $ex) {
             echo $ex->getMessage();
         }
-    }
-
-    public function deleteAppointment($id)
-    {
-        return $this->delete($id, $this->id);
     }
 }
