@@ -1,6 +1,10 @@
 <?php
 ini_set('display_errors', 1);
 require_once "../app/controllers/headers.php";
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 class Users extends Controller
 {
 
@@ -36,6 +40,7 @@ class Users extends Controller
 
     public function signup()
     {
+
         $data = json_decode(file_get_contents("php://input"));
         //die(print_r($data));
         if (!empty($data->name) && !empty($data->birthday) && !empty($data->cin) && !empty($data->email) && !empty($data->password)) {
@@ -59,7 +64,7 @@ class Users extends Controller
                 echo json_encode($this->response);
                 exit;
             }
-        }
+        } else echo json_encode(["message" => "Fill all fields"]);
         //print_r($data);
         //die;
     }
@@ -88,7 +93,19 @@ class Users extends Controller
         if (!empty($data->email) && !empty($data->password)) {
             $loggedInUser = $this->userModel->login($data->email, $data->password);
             if ($loggedInUser) {
-                $this->response += ["User logged in with the following credentials" => $data];
+                /*$token = array(
+                    "iat" => $issued_at,
+                    "exp" => $expiration_time,
+                    "iss" => $issuer,
+                    "data" => array(
+                        "id" => $user->id,
+                        "firstname" => $user->firstname,
+                        "lastname" => $user->lastname,
+                        "email" => $user->email
+                    )
+                );*/
+                //$jwt = JWT::encode($token, $key);
+                $this->response += ["message" => "Successful login.", /*"jwt" => $jwt*/];
                 http_response_code(200);
                 echo json_encode($this->response);
                 exit;
@@ -98,6 +115,8 @@ class Users extends Controller
                 echo json_encode($this->response);
                 exit;
             }
+        } else {
+            echo json_encode(["message" => "Fill all fields"]);
         }
     }
 }
