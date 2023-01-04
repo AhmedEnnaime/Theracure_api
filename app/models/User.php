@@ -24,6 +24,11 @@ class User extends Model
         return $this->getTable();
     }
 
+    public function getUsersNum()
+    {
+        return $this->getRowsNum();
+    }
+
     public function add()
     {
         try {

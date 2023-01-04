@@ -56,4 +56,9 @@ class Doctor extends Model
             echo $ex->getMessage();
         }
     }
+
+    public function getDoctorsNum()
+    {
+        return $this->getRowsNum();
+    }
 }

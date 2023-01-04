@@ -16,6 +16,24 @@ class Users extends Controller
     {
     }
 
+    public function getUsersNum()
+    {
+        $this->response = [];
+        $result = $this->userModel->getUsersNum();
+
+        if ($result) {
+            $this->response += ["users" => $result->total];
+            http_response_code(200);
+            echo json_encode($this->response);
+            exit;
+        } else {
+            $this->response += ["message" => "No user found"];
+            http_response_code(401);
+            echo json_encode($this->response);
+            exit;
+        }
+    }
+
     public function signup()
     {
         $data = json_decode(file_get_contents("php://input"));

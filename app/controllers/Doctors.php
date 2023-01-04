@@ -45,16 +45,16 @@ class Doctors extends Controller
     public function getDoctorsNum()
     {
         $this->response = [];
-        $result = $this->doctorModel->getRowsNum();
+        $result = $this->doctorModel->getDoctorsNum();
 
         if ($result) {
-            $this->response += ["Number of doctors available is :" => $result->total];
+            $this->response += ["doctors" => $result->total];
             http_response_code(200);
             echo json_encode($this->response);
             exit;
         } else {
-            $this->response += ["message" => "Failed fetching data"];
-            http_response_code(503);
+            $this->response += ["message" => "No doctor found"];
+            http_response_code(401);
             echo json_encode($this->response);
             exit;
         }
@@ -64,7 +64,7 @@ class Doctors extends Controller
     {
         $this->response = [];
         $result = $this->doctorModel->getDoctors();
-        $count = $this->doctorModel->getRowsNum();
+        $count = $this->doctorModel->getDoctorsNum();
         if ($count > 0) {
             if ($result) {
                 $this->response += ["Doctors" => $result];
