@@ -19,7 +19,7 @@ class Doctors extends Controller
     public function signup()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if (!empty($data->name) && !empty($data->birthday) && !empty($data->cin) && !empty($data->email) && !empty($data->password)) {
+        if (!empty($data->name) && !empty($data->birthday) && !empty($data->cin) && !empty($data->email) && !empty($data->password) && !empty($data->speciality)) {
             $data->password = password_hash($data->password, PASSWORD_BCRYPT);
             $this->response = [];
             $this->doctorModel->name = $data->name;
@@ -28,6 +28,7 @@ class Doctors extends Controller
             $this->doctorModel->email = $data->email;
             $this->doctorModel->password = $data->password;
             $this->doctorModel->img = $data->img;
+            $this->doctorModel->speciality = $data->speciality;
             $result = $this->doctorModel->add();
             if ($result) {
                 $this->response += ["message" => "Doctor created successfully", "data" => $data];

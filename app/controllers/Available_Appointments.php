@@ -24,6 +24,7 @@ class Available_Appointments extends Controller
             $this->availableAppointmentModel->date = $data->date;
             $this->availableAppointmentModel->time = $data->time;
             $this->availableAppointmentModel->taken = $data->taken;
+            $this->availableAppointmentModel->doctor_id = $data->doctor_id;
             $result = $this->availableAppointmentModel->add();
             if ($result) {
                 $this->response += ["message" => "Appointment sets successfully", "data" => $data];

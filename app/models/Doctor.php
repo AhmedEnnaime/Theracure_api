@@ -13,6 +13,7 @@ class Doctor extends Model
     public $email;
     public $password;
     public $img;
+    public $speciality;
 
     public function __construct()
     {
@@ -27,7 +28,7 @@ class Doctor extends Model
     public function add()
     {
         try {
-            $query = "INSERT INTO " . $this->table . " (name, birthday, cin, email, password, img) VALUES (:name, :birthday, :cin, :email, :password, :img)";
+            $query = "INSERT INTO " . $this->table . " (name, birthday, cin, email, password, img, speciality) VALUES (:name, :birthday, :cin, :email, :password, :img, :speciality)";
             // prepare query
             $this->db->query($query);
 
@@ -38,6 +39,7 @@ class Doctor extends Model
             $this->email = htmlspecialchars(strip_tags($this->email));
             $this->password = htmlspecialchars(strip_tags($this->password));
             $this->img = htmlspecialchars(strip_tags($this->img));
+            $this->img = htmlspecialchars(strip_tags($this->speciality));
 
             // bind values
             $this->db->bind(":name", $this->name);
@@ -46,6 +48,7 @@ class Doctor extends Model
             $this->db->bind(":email", $this->email);
             $this->db->bind(":password", $this->password);
             $this->db->bind(":img", $this->img);
+            $this->db->bind(":speciality", $this->speciality);
 
             // execute query
             if ($this->db->execute()) {
@@ -60,5 +63,17 @@ class Doctor extends Model
     public function getDoctorsNum()
     {
         return $this->getRowsNum();
+    }
+
+    public function getDoctorByAppointments()
+    {
+        try {
+            $query = "SELECT d.name,d.speciality,aa.* FROM doctors d JOIN available_appointments aa ON d.id = aa.doctor_id WHERE aa.taken = 0";
+            $this->db->query($query);
+            $result = $this->db->resultSet();
+            return $result;
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+        }
     }
 }
