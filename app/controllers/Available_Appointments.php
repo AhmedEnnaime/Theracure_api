@@ -20,12 +20,18 @@ class Available_Appointments extends Controller
         $data = json_decode(file_get_contents("php://input"));
         if (!empty($data->date) && !empty($data->time)) {
             $this->response = [];
+
             //date_default_timezone_set("Africa/Casablanca");
+            $slots_num = count($data->time);
             $this->availableAppointmentModel->date = $data->date;
-            $this->availableAppointmentModel->time = $data->time;
+            $this->availableAppointmentModel->time = $slots_num;
+            $this->availableAppointmentModel->slot = $data->time;
             $this->availableAppointmentModel->taken = $data->taken;
             $this->availableAppointmentModel->doctor_id = $data->doctor_id;
+
+            //die(print_r($data->time));
             $result = $this->availableAppointmentModel->add();
+
             if ($result) {
                 $this->response += ["message" => "Appointment sets successfully", "data" => $data];
                 http_response_code(201);
