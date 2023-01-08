@@ -1,5 +1,5 @@
 <?php
-
+ini_set('display_errors', 1);
 
 class Appointment extends Model
 {
@@ -9,9 +9,8 @@ class Appointment extends Model
     // object properties
     public $id;
     public $date;
-    public $time;
     public $user_id;
-    public $doctor_id;
+    public $schedule_id;
 
     public function __construct()
     {
@@ -28,34 +27,46 @@ class Appointment extends Model
         return $this->getRowsNum();
     }
 
+    public function deleteAppointment($id)
+    {
+        return $this->delete($id, $this->id);
+    }
+
     public function add()
     {
         try {
-            $query = "INSERT INTO " . $this->table . " (date,time,user_id,doctor_id) VALUES (:date,:time,:user_id,:doctor_id)";
+            $query = "INSERT INTO " . $this->table . " (date,user_id,schedule_id) VALUES (:date,:user_id,:schedule_id)";
             $this->db->query($query);
 
             $this->date = htmlspecialchars(strip_tags($this->date));
-            $this->time = htmlspecialchars(strip_tags($this->time));
             $this->user_id = htmlspecialchars(strip_tags($this->user_id));
-            $this->doctor_id = htmlspecialchars(strip_tags($this->doctor_id));
+            $this->schedule_id = htmlspecialchars(strip_tags($this->schedule_id));
 
             $this->db->bind(":date", $this->date);
-            $this->db->bind(":time", $this->time);
             $this->db->bind(":user_id", $this->user_id);
-            $this->db->bind(":doctor_id", $this->doctor_id);
+            $this->db->bind(":schedule_id", $this->schedule_id);
 
             if ($this->db->execute()) {
-                return true;
+                $this->db->query("SELECT * FROM schedule WHERE id = :id");
+                $this->db->bind(":id", $this->schedule_id);
+                $row = $this->db->single();
+                if ($row) {
+                    $this->db->query("UPDATE available_appointments SET time = time-1 WHERE id = :id");
+                    $this->db->bind(":id", $row->appointment_id);
+                    if ($this->db->execute()) {
+                        $this->db->query("UPDATE schedule SET taken = 1 WHERE id = :id");
+                        $this->db->bind(":id", $this->schedule_id);
+                        if ($this->db->execute()) {
+                            //die(print("success"));
+                            return true;
+                        }
+                    }
+                }
             } else {
                 return false;
             }
         } catch (PDOException $ex) {
             echo $ex->getMessage();
         }
-    }
-
-    public function deleteAppointment($id)
-    {
-        return $this->delete($id, $this->id);
     }
 }

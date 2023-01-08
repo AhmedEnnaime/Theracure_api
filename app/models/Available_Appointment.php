@@ -46,6 +46,7 @@ class Available_Appointment extends Model
             if ($this->db->execute()) {
                 $this->db->query("SELECT * FROM available_appointments ORDER BY id DESC LIMIT 1");
                 $row = $this->db->single();
+                //die(print_r($row));
                 if (!$this->db->execute())
                     return false;
                 foreach ($this->slot as $slt) {
@@ -59,6 +60,17 @@ class Available_Appointment extends Model
             } else {
                 return false;
             }
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getFreeAppointmentInfo()
+    {
+        try {
+            $this->db->query("SELECT av.date,av.time as slots_num,d.name as doctor_name,sc.slot as slots FROM available_appointments av JOIN schedule sc ON av.id = sc.appointment_id JOIN doctors d ON av.doctor_id = d.id WHERE sc.taken = 0;");
+            $result = $this->db->resultSet();
+            return $result;
         } catch (PDOException $ex) {
             echo $ex->getMessage();
         }
