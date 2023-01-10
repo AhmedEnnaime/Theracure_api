@@ -76,4 +76,17 @@ class Doctor extends Model
             echo $ex->getMessage();
         }
     }
+
+    public function searchByName($keywords)
+    {
+        try {
+            $query = "SELECT * FROM " . $this->table . " WHERE name LIKE :name";
+            $this->db->query($query);
+            $this->db->bind(":name", $keywords);
+            $result = $this->db->resultSet();
+            return $result;
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+        }
+    }
 }

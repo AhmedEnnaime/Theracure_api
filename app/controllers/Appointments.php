@@ -46,4 +46,33 @@ class Appointments extends Controller
             exit;
         }
     }
+
+    public function cancelAppointment()
+    {
+        $path = explode('/', $_SERVER['REQUEST_URI']);
+        $this->response = [];
+        $this->appointmentModel->schedule_id = $path[5];
+        $this->appointmentModel->id = $path[6];
+        $appointment = $this->appointmentModel->getSingleAppointment();
+        $result = $this->appointmentModel->deleteAppointment();
+
+        if ($appointment) {
+            if ($result) {
+                $this->response += ["message" => "Appointment taken successfully"];
+                http_response_code(200);
+                echo json_encode($this->response);
+                exit;
+            } else {
+                $this->response += ["message" => "Failed to cancel appointment"];
+                http_response_code(503);
+                echo json_encode($this->response);
+                exit;
+            }
+        } else {
+            $this->response += ["message" => "Appointment not found"];
+            http_response_code(404);
+            echo json_encode($this->response);
+            exit;
+        }
+    }
 }

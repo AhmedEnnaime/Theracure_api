@@ -49,4 +49,21 @@ class Available_Appointments extends Controller
             exit;
         }
     }
+
+    public function getAppointmentsInfo()
+    {
+        $this->response = [];
+        $result = $this->availableAppointmentModel->getFreeAppointmentInfo();
+        if ($result) {
+            $this->response += ["Appointments" => $result];
+            http_response_code(200);
+            echo json_encode($this->response);
+            exit;
+        } else {
+            $this->response += ["message" => "Failed fetching data"];
+            http_response_code(503);
+            echo json_encode($this->response);
+            exit;
+        }
+    }
 }

@@ -17,18 +17,6 @@ class Model
         return $result;
     }
 
-
-    public function getSpecific($col, $constraint, $orderBy)
-    {
-        $this->db->query("SELECT * FROM $this->table WHERE $col = :constrnt ORDER BY :ordrby DESC");
-        $this->db->bind(":constrnt", $constraint);
-        $this->db->bind(":ordrby", $orderBy);
-
-        $result = $this->db->resultSet();
-        return $result;
-    }
-
-
     public function getRowsNum()
     {
         $this->db->query("SELECT COUNT(*) as total FROM $this->table");
@@ -38,19 +26,24 @@ class Model
 
     public function getElementById($id)
     {
-        $this->db->query("SELECT * FROM $this->table WHERE $id = :id");
+        $this->db->query("SELECT * FROM $this->table WHERE id = :id");
         $this->db->bind(":id", $id);
         $row = $this->db->single();
         return $row;
     }
 
-    public function delete($id, $val)
+    public function delete($id)
     {
-        $this->db->query("DELETE FROM $this->table WHERE $id = '$val'");
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            return false;
+        try {
+            $this->db->query("DELETE FROM $this->table WHERE id = :id");
+            $this->db->bind(":id", $id);
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
         }
     }
 }

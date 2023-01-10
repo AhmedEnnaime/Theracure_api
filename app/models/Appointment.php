@@ -27,9 +27,9 @@ class Appointment extends Model
         return $this->getRowsNum();
     }
 
-    public function deleteAppointment($id)
+    public function getSingleAppointment()
     {
-        return $this->delete($id, $this->id);
+        return $this->getElementById($this->id);
     }
 
     public function add()
@@ -58,6 +58,36 @@ class Appointment extends Model
                         $this->db->bind(":id", $this->schedule_id);
                         if ($this->db->execute()) {
                             //die(print("success"));
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                return false;
+            }
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getAppointmentsByUserId()
+    {
+    }
+
+    public function deleteAppointment()
+    {
+        try {
+            $this->db->query("SELECT * FROM schedule WHERE id = :id");
+            $this->db->bind(":id", $this->schedule_id);
+            $row = $this->db->single();
+            if ($row && $this->getSingleAppointment()) {
+                $this->db->query("UPDATE available_appointments SET time = time+1 WHERE id = :id");
+                $this->db->bind(":id", $row->appointment_id);
+                if ($this->db->execute()) {
+                    $this->db->query("UPDATE schedule SET taken = 0 WHERE id = :id");
+                    $this->db->bind(":id", $this->schedule_id);
+                    if ($this->db->execute()) {
+                        if ($this->delete($this->id)) {
                             return true;
                         }
                     }

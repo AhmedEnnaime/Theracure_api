@@ -81,7 +81,26 @@ class Doctors extends Controller
             }
         } else {
             $this->response += ["message" => "No doctor available"];
+            http_response_code(404);
+            echo json_encode($this->response);
+            exit;
+        }
+    }
+
+    public function search()
+    {
+        $this->response = [];
+        $keywords = isset($_GET["name"]) ? $_GET["name"] : "";
+        $result = $this->doctorModel->searchByName($keywords);
+        die(print_r($result));
+        if ($result) {
+            $this->response += ["Doctors" => $result];
             http_response_code(200);
+            echo json_encode($this->response);
+            exit;
+        } else {
+            $this->response += ["message" => "Failed fetching data"];
+            http_response_code(503);
             echo json_encode($this->response);
             exit;
         }
