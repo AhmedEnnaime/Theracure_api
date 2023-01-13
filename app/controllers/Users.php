@@ -2,8 +2,7 @@
 ini_set('display_errors', 1);
 require_once "../app/controllers/headers.php";
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+require_once "../app/generate_jwt.php";
 
 class Users extends Controller
 {
@@ -97,6 +96,8 @@ class Users extends Controller
         if (!empty($data->email) && !empty($data->password)) {
             $loggedInUser = $this->userModel->login($data->email, $data->password);
             if ($loggedInUser) {
+                $token = new JWTGenerate();
+                $jwt = $token->generate();
                 /*$token = array(
                     "iat" => $issued_at,
                     "exp" => $expiration_time,
@@ -109,7 +110,7 @@ class Users extends Controller
                     )
                 );*/
                 //$jwt = JWT::encode($token, $key);
-                $this->response += ["message" => "Successful login.", /*"jwt" => $jwt*/];
+                $this->response += ["message" => "Successful login.", "credentials" => $loggedInUser, "token" => $jwt /*"jwt" => $jwt*/];
                 http_response_code(200);
                 echo json_encode($this->response);
                 exit;
@@ -121,6 +122,14 @@ class Users extends Controller
             }
         } else {
             echo json_encode(["message" => "Fill all fields"]);
+        }
+    }
+
+    public function adew()
+    {
+        try {
+            echo 'xeke';
+        } catch (PDOException $ex) {
         }
     }
 }
