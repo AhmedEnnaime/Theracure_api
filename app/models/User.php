@@ -78,4 +78,26 @@ class User extends Model
             echo $ex->getMessage();
         }
     }
+
+    public function update()
+    {
+        try {
+            $query = "UPDATE " . $this->table . " SET name=:name,birthday=:birthday,cin=:cin,email=:email,password=:password WHERE id = :id";
+            $this->db->query($query);
+            $this->db->bind(":id", $this->id);
+            $this->db->bind(":name", $this->name);
+            $this->db->bind(":birthday", $this->birthday);
+            $this->db->bind(":cin", $this->cin);
+            $this->db->bind(":email", $this->email);
+            $this->db->bind(":password", $this->password);
+            $this->db->bind(":img", $this->img);
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+        }
+    }
 }

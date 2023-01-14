@@ -24,13 +24,14 @@ class JWTGenerate
         $this->domainName = URLROOT;
     }
 
-    public function generate()
+    public function generate($userId)
     {
         $this->payload = [
             'iat'  => $this->date->getTimestamp(),         // Issued at: time when the token was generated
             'iss'  => $this->domainName,                       // Issuer
             'nbf'  => $this->date->getTimestamp(),         // Not before
             'exp'  => $this->expire_at,                           // Expire
+            'userId' => $userId,
         ];
 
         return JWT::encode($this->payload, $this->secret_key, 'HS512');
@@ -40,11 +41,9 @@ class JWTGenerate
     {
         if (isset($_COOKIE["jwt"])) {
             if ($_COOKIE["jwt"] === "" || $_COOKIE["jwt"] === null || $_COOKIE["jwt"] === 0 || $_COOKIE["jwt"] === false) {
-                // echo $_COOKIE["jwt"];
                 echo 'Login to authenticate';
                 exit;
             } else {
-                // echo $_COOKIE["jwt"];
                 return $_COOKIE["jwt"];
             }
         } else {
@@ -56,9 +55,42 @@ class JWTGenerate
 
     public static function validate()
     {
-        if (!$tokenInCookie = JWTGenerate::getToken()) {
+        $tokenInCookie = JWTGenerate::getToken();
+        if (!$tokenInCookie) {
             echo "Token not found";
             exit();
         };
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'UPDATE') {
+            $jwt = $tokenInCookie;
+            if (!$jwt) {
+                // No token was able to be extracted from the authorization header
+                header('HTTP/1.0 400 Bad Request');
+                // return false;
+                exit;
+            }
+
+            $secret_key = '68V0zWFrS72GbpPreidkQFLfj4v9m3Ti+DXc8OB0gcM=';
+            try {
+                $token = JWT::decode($jwt, new Key($secret_key, 'HS512'));
+            } catch (ExpiredException $e) {
+                echo "Expired Token ";
+                echo "Please sign-in";
+                exit;
+            }
+
+            $now = new DateTimeImmutable();
+            $serverName = URLROOT;
+
+            if (
+                $token->iss !== $serverName ||
+                $token->nbf > $now->getTimestamp() ||
+                $token->exp < $now->getTimestamp()
+            ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }

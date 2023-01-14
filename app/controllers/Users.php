@@ -87,35 +87,35 @@ class Users extends Controller
         }
     }
 
-    public function login()
+    public function update()
     {
-        $this->response = [];
         $data = json_decode(file_get_contents("php://input"));
-        if (!empty($data->email) && !empty($data->password)) {
-            $loggedInUser = $this->userModel->login($data->email, $data->password);
-            if ($loggedInUser) {
-                $token = new JWTGenerate();
-                $jwt = $token->generate();
-                $this->response += ["message" => "Successful login", "credentials" => $loggedInUser, "token" => $jwt /*"jwt" => $jwt*/];
-                http_response_code(200);
+        //die(print_r($data));
+        if (!empty($data->name) && !empty($data->birthday) && !empty($data->cin) && !empty($data->email) && !empty($data->password)) {
+            $data->password = password_hash($data->password, PASSWORD_BCRYPT);
+            $this->response = [];
+            $this->userModel->name = $data->name;
+            $this->userModel->birthday = $data->birthday;
+            $this->userModel->cin = $data->cin;
+            $this->userModel->email = $data->email;
+            $this->userModel->password = $data->password;
+            $this->userModel->img = $data->img;
+            $result = $this->userModel->update();
+            if ($result) {
+                $this->response += ["message" => "Profile updated successfully", "data" => $data];
+                http_response_code(201);
                 echo json_encode($this->response);
                 exit;
             } else {
-                $this->response += ["message" => "Login failed"];
-                http_response_code(401);
+                $this->response += ["message" => "Failed updating profile"];
+                http_response_code(503);
                 echo json_encode($this->response);
                 exit;
             }
         } else {
-            echo json_encode(["message" => "Fill all fields"]);
-        }
-    }
-
-    public function adew()
-    {
-        try {
-            echo 'xeke';
-        } catch (PDOException $ex) {
+            $this->response += ["message" => "Fill all fields please"];
+            echo json_encode($this->response);
+            exit;
         }
     }
 }
