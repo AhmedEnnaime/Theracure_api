@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors', 1);
-require_once "../app/controllers/headers.php";
+require_once "../app/controllers/auth_headers.php";
 class Available_Appointments extends Controller
 {
     public $availableAppointmentModel;

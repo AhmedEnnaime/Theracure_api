@@ -68,8 +68,6 @@ class Users extends Controller
             echo json_encode($this->response);
             exit;
         }
-        //print_r($data);
-        //die;
     }
 
     public function getAllUsers()
@@ -98,19 +96,7 @@ class Users extends Controller
             if ($loggedInUser) {
                 $token = new JWTGenerate();
                 $jwt = $token->generate();
-                /*$token = array(
-                    "iat" => $issued_at,
-                    "exp" => $expiration_time,
-                    "iss" => $issuer,
-                    "data" => array(
-                        "id" => $user->id,
-                        "firstname" => $user->firstname,
-                        "lastname" => $user->lastname,
-                        "email" => $user->email
-                    )
-                );*/
-                //$jwt = JWT::encode($token, $key);
-                $this->response += ["message" => "Successful login.", "credentials" => $loggedInUser, "token" => $jwt /*"jwt" => $jwt*/];
+                $this->response += ["message" => "Successful login", "credentials" => $loggedInUser, "token" => $jwt /*"jwt" => $jwt*/];
                 http_response_code(200);
                 echo json_encode($this->response);
                 exit;
