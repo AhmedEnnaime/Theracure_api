@@ -23,6 +23,7 @@ class Appointments extends Controller
             $this->response = [];
 
             //date_default_timezone_set("Africa/Casablanca");
+            // Need to get the id from jwt token
             $this->appointmentModel->date = $data->date;
             $this->appointmentModel->user_id = $data->user_id;
             $this->appointmentModel->schedule_id = $data->schedule_id;
@@ -70,6 +71,25 @@ class Appointments extends Controller
             }
         } else {
             $this->response += ["message" => "Appointment not found"];
+            http_response_code(404);
+            echo json_encode($this->response);
+            exit;
+        }
+    }
+
+    public function getLoggedInUserAppointments()
+    {
+        $this->response = [];
+        $userId = isset($_GET["id"]) ? $_GET["id"] : "";
+        $this->appointmentModel->user_id = $userId;
+        $result = $this->appointmentModel->getAppointmentsByUserId();
+        if ($result) {
+            $this->response += ["Appointments" => $result];
+            http_response_code(200);
+            echo json_encode($this->response);
+            exit;
+        } else {
+            $this->response += ["message" => "Appointments not found"];
             http_response_code(404);
             echo json_encode($this->response);
             exit;

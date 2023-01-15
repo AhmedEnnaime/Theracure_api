@@ -90,6 +90,7 @@ class Users extends Controller
     public function update()
     {
         $data = json_decode(file_get_contents("php://input"));
+        $userId = isset($_GET["id"]) ? $_GET["id"] : "";
         //die(print_r($data));
         if (!empty($data->name) && !empty($data->birthday) && !empty($data->cin) && !empty($data->email) && !empty($data->password)) {
             $data->password = password_hash($data->password, PASSWORD_BCRYPT);
@@ -100,7 +101,7 @@ class Users extends Controller
             $this->userModel->email = $data->email;
             $this->userModel->password = $data->password;
             $this->userModel->img = $data->img;
-            $result = $this->userModel->update();
+            $result = $this->userModel->update($userId);
             if ($result) {
                 $this->response += ["message" => "Profile updated successfully", "data" => $data];
                 http_response_code(201);

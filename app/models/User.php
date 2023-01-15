@@ -79,12 +79,12 @@ class User extends Model
         }
     }
 
-    public function update()
+    public function update($id)
     {
         try {
-            $query = "UPDATE " . $this->table . " SET name=:name,birthday=:birthday,cin=:cin,email=:email,password=:password WHERE id = :id";
+            $query = "UPDATE " . $this->table . " SET name=:name,birthday=:birthday,cin=:cin,email=:email,password=:password,img=:img WHERE id = :id";
             $this->db->query($query);
-            $this->db->bind(":id", $this->id);
+            $this->db->bind(":id", $id);
             $this->db->bind(":name", $this->name);
             $this->db->bind(":birthday", $this->birthday);
             $this->db->bind(":cin", $this->cin);

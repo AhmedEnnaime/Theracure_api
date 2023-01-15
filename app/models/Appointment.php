@@ -72,6 +72,15 @@ class Appointment extends Model
 
     public function getAppointmentsByUserId()
     {
+        try {
+            $query = "SELECT * FROM " . $this->table . " WHERE user_id = :user_id";
+            $this->db->query($query);
+            $this->db->bind(":user_id", $this->user_id);
+            $result = $this->db->resultSet();
+            return $result;
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+        }
     }
 
     public function deleteAppointment()
