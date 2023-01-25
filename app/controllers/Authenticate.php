@@ -12,7 +12,6 @@ require_once 'vendor/autoload.php';
 class Authenticate extends Controller
 {
     private $userId;
-    private $name;
     public $jwt;
     public $token;
     public $userModel;
@@ -87,7 +86,6 @@ class Authenticate extends Controller
         if (JWTGenerate::validate()) {
             $this->response += ["message" => "Successfully authenticated"];
             echo json_encode($this->response);
-            die(print_r($this->token));
             return true;
         } else {
             $this->response += ["message" => "Failed authentication"];
