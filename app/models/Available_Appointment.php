@@ -68,7 +68,7 @@ class Available_Appointment extends Model
     public function getFreeAppointmentInfo()
     {
         try {
-            $this->db->query("SELECT av.date,av.time as slots_num,d.name as doctor_name,sc.slot as slots FROM available_appointments av JOIN schedule sc ON av.id = sc.appointment_id JOIN doctors d ON av.doctor_id = d.id WHERE sc.taken = 0;");
+            $this->db->query("SELECT av.date,av.time as slots_num,d.name as doctor_name,sc.slot as slots,sc.id as schedule_id FROM available_appointments av JOIN schedule sc ON av.id = sc.appointment_id JOIN doctors d ON av.doctor_id = d.id WHERE sc.taken = 0;");
             $result = $this->db->resultSet();
             return $result;
         } catch (PDOException $ex) {
