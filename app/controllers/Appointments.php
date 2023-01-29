@@ -57,7 +57,7 @@ class Appointments extends Controller
 
         if ($appointment) {
             if ($result) {
-                $this->response += ["message" => "Appointment taken successfully"];
+                $this->response += ["message" => "Appointment canceled successfully"];
                 http_response_code(200);
                 echo json_encode($this->response);
                 exit;
@@ -75,10 +75,9 @@ class Appointments extends Controller
         }
     }
 
-    public function getLoggedInUserAppointments()
+    public function getLoggedInUserAppointments($userId)
     {
         $this->response = [];
-        $userId = isset($_GET["id"]) ? $_GET["id"] : "";
         $this->appointmentModel->user_id = $userId;
         $result = $this->appointmentModel->getAppointmentsByUserId();
         if ($result) {

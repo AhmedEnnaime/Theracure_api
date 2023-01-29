@@ -73,7 +73,7 @@ class Appointment extends Model
     public function getAppointmentsByUserId()
     {
         try {
-            $query = "SELECT * FROM " . $this->table . " WHERE user_id = :user_id";
+            $query = "SELECT a.*,s.slot,d.name as doctor_name,d.img as doctor_img FROM appointments a JOIN schedule s ON a.schedule_id = s.id JOIN available_appointments av ON s.appointment_id = av.id JOIN doctors d ON d.id = av.doctor_id WHERE a.user_id = :user_id;";
             $this->db->query($query);
             $this->db->bind(":user_id", $this->user_id);
             $result = $this->db->resultSet();
