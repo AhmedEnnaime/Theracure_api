@@ -18,10 +18,9 @@ class Appointments extends Controller
 
     public function takeAppointment($userId)
     {
+        $this->response = [];
         $data = json_decode(file_get_contents("php://input"));
         if (!empty($data->date) && !empty($data->schedule_id) && !empty($data->user_id)) {
-            $this->response = [];
-
             $this->appointmentModel->date = $data->date;
             $this->appointmentModel->user_id = $userId;
             $this->appointmentModel->schedule_id = $data->schedule_id;
